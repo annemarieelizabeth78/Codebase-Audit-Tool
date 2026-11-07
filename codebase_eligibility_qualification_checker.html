@@ -1,592 +1,289 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-slate-900 text-slate-100">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codebase Eligibility & Qualification Checker</title>
+    <title>Codebase Eligibility & Submission Checker</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f6ff',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Custom scrollbar styling for slick look */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
-    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="h-full flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-white">
-
-    <!-- Header Navigation Bar -->
-    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans antialiased pb-12">
+    <!-- Header -->
+    <header class="border-b border-slate-800 bg-slate-950/50 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-brand-500/20">
-                    <i class="fa-solid fa-code-merge text-white text-lg"></i>
+                <div class="p-2 bg-indigo-600/20 text-indigo-400 rounded-lg border border-indigo-500/30">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
                 </div>
                 <div>
-                    <h1 class="font-bold text-lg text-white leading-tight">Codebase Audit Tool</h1>
-                    <p class="text-xs text-slate-400">AI Data Licensing Qualification Checker</p>
+                    <h1 class="font-bold text-lg text-white">Codebase Licensing Pre-Checker</h1>
+                    <p class="text-xs text-slate-400">Validate repository eligibility for commercial AI data acquisition</p>
                 </div>
             </div>
-            
-            <div class="flex items-center space-x-4">
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
-                    <i class="fa-solid fa-shield-halved text-emerald-400 mr-1.5"></i> Read-Only Audit Simulation
-                </span>
+            <div class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-slate-300 flex items-center gap-2 border border-slate-700">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Status: Live Verification Rules
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <main class="max-w-6xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <!-- Left Column: Input Controls & Audits -->
-        <div class="lg:col-span-7 space-y-8">
+        <!-- Left Column: Form & Metric Inputs -->
+        <div class="lg:col-span-2 space-x-0 space-y-6">
             
-            <!-- Section 1: Language Selection -->
-            <section class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 backdrop-blur shadow-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-base font-semibold text-white flex items-center">
-                        <span class="w-7 h-7 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center mr-2.5 border border-brand-500/20 text-xs">1</span>
-                        Primary Language Stack
-                    </h2>
-                    <span class="text-xs text-slate-400">Must be primarily written in target languages</span>
+            <!-- Target Languages -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 backdrop-blur">
+                <h2 class="text-base font-semibold text-white flex items-center gap-2 mb-4">
+                    <i data-lucide="code-2" class="w-5 h-5 text-indigo-400"></i>
+                    Primary Language Distribution (Need &ge; 50%)
+                </h2>
+                <div class="grid grid-cols-3 sm:grid-cols-6 gap-3" id="languageSelector">
+                    <button type="button" onclick="toggleLang('Go')" class="lang-btn border border-slate-700 bg-slate-900/60 p-3 rounded-lg flex flex-col items-center gap-2 hover:border-indigo-500 transition">
+                        <span class="font-semibold text-sm">Go</span>
+                        <span class="text-xs text-slate-400" id="percent-Go">0%</span>
+                    </button>
+                    <button type="button" onclick="toggleLang('Rust')" class="lang-btn border border-slate-700 bg-slate-900/60 p-3 rounded-lg flex flex-col items-center gap-2 hover:border-indigo-500 transition">
+                        <span class="font-semibold text-sm">Rust</span>
+                        <span class="text-xs text-slate-400" id="percent-Rust">0%</span>
+                    </button>
+                    <button type="button" onclick="toggleLang('C')" class="lang-btn border border-slate-700 bg-slate-900/60 p-3 rounded-lg flex flex-col items-center gap-2 hover:border-indigo-500 transition">
+                        <span class="font-semibold text-sm">C</span>
+                        <span class="text-xs text-slate-400" id="percent-C">0%</span>
+                    </button>
+                    <button type="button" onclick="toggleLang('C++')" class="lang-btn border border-slate-700 bg-slate-900/60 p-3 rounded-lg flex flex-col items-center gap-2 hover:border-indigo-500 transition">
+                        <span class="font-semibold text-sm">C++</span>
+                        <span class="text-xs text-slate-400" id="percent-C++">0%</span>
+                    </button>
+                    <button type="button" onclick="toggleLang('Swift')" class="lang-btn border border-slate-700 bg-slate-900/60 p-3 rounded-lg flex flex-col items-center gap-2 hover:border-indigo-500 transition">
+                        <span class="font-semibold text-sm">Swift</span>
+                        <span class="text-xs text-slate-400" id="percent-Swift">0%</span>
+                    </button>
+                    <button type="button" onclick="toggleLang('MATLAB')" class="lang-btn border border-slate-700 bg-slate-900/60 p-3 rounded-lg flex flex-col items-center gap-2 hover:border-indigo-500 transition">
+                        <span class="font-semibold text-sm">MATLAB</span>
+                        <span class="text-xs text-slate-400" id="percent-MATLAB">0%</span>
+                    </button>
                 </div>
+            </div>
 
-                <p class="text-xs text-slate-300 mb-4">Select the primary language(s) that make up your codebase. At least one target language is required.</p>
+            <!-- Quantitative Metrics Inputs -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 backdrop-blur space-y-5">
+                <h2 class="text-base font-semibold text-white flex items-center gap-2">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-indigo-400"></i>
+                    Repository Metrics Audit
+                </h2>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="languagesContainer">
-                    <!-- Language Checkboxes rendered by JS -->
-                </div>
-            </section>
-
-            <!-- Section 2: Metric Threshold Inputs -->
-            <section class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 backdrop-blur shadow-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-base font-semibold text-white flex items-center">
-                        <span class="w-7 h-7 rounded-lg bg-brand-500/10 text-brand-400 flex items-center justify-center mr-2.5 border border-brand-500/20 text-xs">2</span>
-                        Repository Metrics & Stats
-                    </h2>
-                    <span class="text-xs text-slate-400">Values matched against GitHub API</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <!-- Lines of Code -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5 flex justify-between">
-                            <span>Lines of Code (LOC)</span>
-                            <span class="text-slate-400">Req: ≥ 50,000</span>
-                        </label>
-                        <div class="relative">
-                            <input type="number" id="inputLoc" value="65000" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent font-mono transition-all">
-                            <span class="absolute right-3 top-2.5 text-xs text-slate-500">lines</span>
-                        </div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Lines of Own Code (Min: 50,000)</label>
+                        <input type="number" id="inputLoc" value="12000" oninput="calculateEligibility()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
-
-                    <!-- Total Commits -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5 flex justify-between">
-                            <span>Total Commits</span>
-                            <span class="text-slate-400">Req: ≥ 1,000</span>
-                        </label>
-                        <div class="relative">
-                            <input type="number" id="inputCommits" value="1250" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent font-mono transition-all">
-                            <span class="absolute right-3 top-2.5 text-xs text-slate-500">commits</span>
-                        </div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Commits on Main Branch (Min: 1,000)</label>
+                        <input type="number" id="inputCommits" value="250" oninput="calculateEligibility()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
-
-                    <!-- Merged Pull Requests -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5 flex justify-between">
-                            <span>Merged Pull Requests</span>
-                            <span class="text-slate-400">Req: ≥ 100</span>
-                        </label>
-                        <div class="relative">
-                            <input type="number" id="inputPrs" value="120" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent font-mono transition-all">
-                            <span class="absolute right-3 top-2.5 text-xs text-slate-500">PRs</span>
-                        </div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Merged Pull Requests (Min: 100)</label>
+                        <input type="number" id="inputPrs" value="15" oninput="calculateEligibility()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
-
-                    <!-- PR Time Span -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5 flex justify-between">
-                            <span>PR Time Span</span>
-                            <span class="text-slate-400">Req: ≥ 6.0 mos</span>
-                        </label>
-                        <div class="relative">
-                            <input type="number" id="inputSpan" value="8" step="0.1" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent font-mono transition-all">
-                            <span class="absolute right-3 top-2.5 text-xs text-slate-500">months</span>
-                        </div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">PR Timeline Span (Min: 6 Months)</label>
+                        <input type="number" id="inputMonths" value="3" oninput="calculateEligibility()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
-
-                    <!-- Unique Active Contributors -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5 flex justify-between">
-                            <span>Merged PR Contributors (>3mo old)</span>
-                            <span class="text-slate-400">Req: ≥ 5</span>
-                        </label>
-                        <div class="relative">
-                            <input type="number" id="inputContributors" value="6" min="0" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent font-mono transition-all">
-                            <span class="absolute right-3 top-2.5 text-xs text-slate-500">people</span>
-                        </div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Distinct Contributors (&gt;3mo old) (Min: 5)</label>
+                        <input type="number" id="inputAuthors" value="2" oninput="calculateEligibility()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
-
-                    <!-- Test Coverage -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5 flex justify-between">
-                            <span>Automated Test Coverage</span>
-                            <span class="text-slate-400">Req: ≥ 25%</span>
-                        </label>
-                        <div class="relative">
-                            <input type="number" id="inputCoverage" value="38" min="0" max="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-brand-500 focus:border-transparent font-mono transition-all">
-                            <span class="absolute right-3 top-2.5 text-xs text-slate-500">%</span>
-                        </div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Test Coverage Percentage (Min: 25%)</label>
+                        <input type="number" id="inputCoverage" value="10" oninput="calculateEligibility()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                 </div>
 
-                <!-- AI vs Human Contribution Slider -->
-                <div class="mt-6 pt-5 border-t border-slate-700/50">
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-xs font-medium text-slate-300">Human vs. AI Generated Code Balance</label>
-                        <span id="aiPercentageLabel" class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-700 text-slate-200">20% AI / 80% Human</span>
+                <!-- AI Code Generation Slider -->
+                <div class="pt-2">
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-xs font-medium text-slate-300">Human vs. AI Code Ratio</label>
+                        <span id="aiRatioLabel" class="text-xs text-indigo-400 font-semibold">10% AI Generated</span>
                     </div>
-                    <input type="range" id="inputAiPercentage" min="0" max="100" value="20" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-500">
-                    <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                        <span>0% AI (100% Human)</span>
-                        <span>Max AI allowed: ~40%</span>
-                        <span>100% AI (Auto-Reject)</span>
-                    </div>
+                    <input type="range" id="inputAiRatio" min="0" max="100" value="10" oninput="calculateEligibility()" class="w-full accent-indigo-500 bg-slate-900 rounded-lg h-2 cursor-pointer">
+                    <p class="text-[11px] text-slate-400 mt-1">Codebases exceeding 40% AI generation are automatically rejected.</p>
                 </div>
-            </section>
+            </div>
 
-            <!-- Section 3: Red Flags & Disqualification Checks -->
-            <section class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-6 backdrop-blur shadow-xl">
-                <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-base font-semibold text-white flex items-center">
-                        <span class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center mr-2.5 border border-rose-500/20 text-xs">3</span>
-                        Automatic Rejection Red-Flags
-                    </h2>
-                    <span class="text-xs text-rose-400 font-medium">Any checked item triggers rejection</span>
+            <!-- Automatic Rejection Check -->
+            <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-6 backdrop-blur">
+                <h2 class="text-base font-semibold text-white flex items-center gap-2 mb-3">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400"></i>
+                    Compliance & Red-Flag Audit
+                </h2>
+                <div class="space-y-3" id="redFlagsList">
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="rf1" onchange="calculateEligibility()" class="mt-1 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+                        <span class="text-xs text-slate-300">Written for an employer/client without explicit written IP transfer to you.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="rf2" onchange="calculateEligibility()" class="mt-1 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+                        <span class="text-xs text-slate-300">Fork, copy, tutorial, or bootcamp project structure.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="rf3" onchange="calculateEligibility()" class="mt-1 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+                        <span class="text-xs text-slate-300">Git history is squashed into single/few commits or artificially backdated.</span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer">
+                        <input type="checkbox" id="rf4" onchange="calculateEligibility()" class="mt-1 rounded bg-slate-900 border-slate-700 text-indigo-600 focus:ring-0">
+                        <span class="text-xs text-slate-300">Contains un-redacted API keys, passwords, or personal identifying data (PII).</span>
+                    </label>
                 </div>
-                <p class="text-xs text-slate-400 mb-4">Verify that your repository does not violate any of the non-negotiable compliance rules below:</p>
-
-                <div class="space-y-3" id="redFlagsContainer">
-                    <!-- Red Flag Items populated by JS -->
-                </div>
-            </section>
+            </div>
         </div>
 
-        <!-- Right Column: Real-time Eligibility Dashboard & Bundle Guide -->
-        <div class="lg:col-span-5 space-y-6">
+        <!-- Right Column: Verification Results Panel -->
+        <div class="space-y-6">
             
-            <!-- Dashboard Card -->
-            <div class="bg-slate-800 border border-slate-700/80 rounded-2xl p-6 shadow-2xl sticky top-24">
-                <div class="flex items-center justify-between border-b border-slate-700 pb-4">
-                    <div>
-                        <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Audit Results</h3>
-                        <div id="overallStatusBadge" class="mt-1 inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                            <i class="fa-solid fa-circle-check mr-1.5"></i> ELIGIBLE FOR SUBMISSION
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-xs text-slate-400 block">Readiness Score</span>
-                        <span id="readinessScore" class="text-3xl font-extrabold text-white font-mono">100%</span>
-                    </div>
+            <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-6 sticky top-24 backdrop-blur shadow-xl">
+                <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Submission Status</h3>
+                
+                <!-- Status Badge -->
+                <div id="statusBadge" class="p-4 rounded-xl border mb-6 text-center">
+                    <!-- Dynamic status inserted by JS -->
                 </div>
 
-                <!-- Metrics Checklist Overview -->
-                <div class="mt-5 space-y-2.5 text-xs" id="statusList">
-                    <!-- Generated via JavaScript -->
+                <!-- Checklist Verification -->
+                <div class="space-y-3 text-xs" id="checklistResults">
+                    <!-- Dynamic list items -->
                 </div>
 
-                <!-- Call to Action / Summary Message -->
-                <div id="actionBanner" class="mt-6 p-4 rounded-xl bg-slate-900/80 border border-slate-700 text-xs text-slate-300">
-                    <!-- Dynamically updated status message -->
-                </div>
-
-                <!-- Tabs: GitHub App vs Git Bundle -->
-                <div class="mt-6">
-                    <div class="flex border-b border-slate-700">
-                        <button id="tabGithubBtn" class="flex-1 py-2 px-3 text-center text-xs font-semibold text-brand-400 border-b-2 border-brand-500 transition-colors">
-                            <i class="fa-brands fa-github mr-1"></i> Connect GitHub
-                        </button>
-                        <button id="tabBundleBtn" class="flex-1 py-2 px-3 text-center text-xs font-semibold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition-colors">
-                            <i class="fa-solid fa-box-archive mr-1"></i> Git Bundle Guide
-                        </button>
-                    </div>
-
-                    <!-- Tab Content 1: GitHub -->
-                    <div id="tabGithubContent" class="mt-4 space-y-3">
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            Install our read-only GitHub app on your selected repository. It reads code metadata, history, PRs, and CI runs—it cannot modify anything.
-                        </p>
-                        <button id="submitBtn" onclick="handleSubmission()" class="w-full py-3 px-4 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center space-x-2">
-                            <i class="fa-brands fa-github text-sm"></i>
-                            <span>Install App & Submit Repository</span>
-                        </button>
-                    </div>
-
-                    <!-- Tab Content 2: Git Bundle Instructions -->
-                    <div id="tabBundleContent" class="mt-4 hidden space-y-3">
-                        <p class="text-xs text-slate-300">Not on GitHub or preferred offline submission? Generate a standard Git bundle with full commit history:</p>
-
-                        <div class="relative bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-200 space-y-2">
-                            <div class="flex justify-between items-center text-slate-400 text-[10px]">
-                                <span>TERMINAL COMMANDS</span>
-                                <button onclick="copyBundleCommands()" class="text-brand-400 hover:text-brand-300 flex items-center gap-1">
-                                    <i class="fa-regular fa-copy"></i> Copy
-                                </button>
-                            </div>
-                            <p class="text-emerald-400"># 1. Fetch all refs & branches</p>
-                            <p class="text-slate-300">git fetch --all --tags</p>
-                            <p class="text-emerald-400"># 2. Create complete bundle file</p>
-                            <p class="text-slate-300">git bundle create repository.bundle --all</p>
-                            <p class="text-emerald-400"># 3. Verify bundle integrity</p>
-                            <p class="text-slate-300">git bundle verify repository.bundle</p>
-                        </div>
-
-                        <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[11px] text-amber-300/90 leading-normal flex items-start space-x-2">
-                            <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-0.5 shrink-0"></i>
-                            <span>Ensure you run this on an un-squashed repository containing complete commit history and tags.</span>
-                        </div>
-                    </div>
+                <!-- Git Bundle Helper Button -->
+                <div class="mt-6 pt-6 border-t border-slate-700/80">
+                    <button onclick="toggleBundleModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition text-xs">
+                        <i data-lucide="terminal" class="w-4 h-4"></i>
+                        Generate Git Bundle Command
+                    </button>
                 </div>
             </div>
 
         </div>
-
     </main>
 
-    <!-- Modal Dialog for Submission Confirmation / Toast -->
-    <div id="notificationModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl text-center space-y-4">
-            <div id="modalIcon" class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-xl">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 id="modalTitle" class="text-lg font-bold text-white">Repository Submitted</h3>
-            <p id="modalMessage" class="text-xs text-slate-300 leading-relaxed">Your repository qualification check was successful! Automated checks have queued your repo for initial verification.</p>
-            <button onclick="closeModal()" class="w-full py-2.5 bg-slate-700 hover:bg-slate-600 text-white font-medium text-xs rounded-xl transition-colors">
-                Close
+    <!-- Git Bundle Modal -->
+    <div id="bundleModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="toggleBundleModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
             </button>
+            <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                <i data-lucide="terminal" class="w-5 h-5 text-indigo-400"></i>
+                Create Git Bundle Archive
+            </h3>
+            <p class="text-xs text-slate-400 mb-4">If your repository is not hosted on GitHub, generate a clean `.bundle` file preserving full git history using terminal:</p>
+            
+            <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-indigo-300 relative group mb-4">
+                <code>git bundle create codebase_submission.bundle --all</code>
+                <button onclick="copyCommand()" class="absolute right-2 top-2 bg-slate-800 hover:bg-slate-700 text-slate-300 p-1.5 rounded border border-slate-700 transition">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+            
+            <ul class="text-xs text-slate-400 space-y-1.5 list-disc list-inside">
+                <li>Verifies all branch refs and un-squashed commits.</li>
+                <li>Includes PR and CI context where available.</li>
+                <li>Ensures zero loss of historical contributor timestamps.</li>
+            </ul>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <!-- JavaScript Logic -->
     <script>
-        // Supported Target Languages Data
-        const TARGET_LANGUAGES = [
-            { id: 'go', name: 'Go', icon: 'fa-brands fa-golang', color: 'text-cyan-400' },
-            { id: 'rust', name: 'Rust', icon: 'fa-gear', color: 'text-orange-400' },
-            { id: 'c', name: 'C', icon: 'fa-solid fa-c', color: 'text-blue-400' },
-            { id: 'cpp', name: 'C++', icon: 'fa-solid fa-code', color: 'text-indigo-400' },
-            { id: 'swift', name: 'Swift', icon: 'fa-brands fa-swift', color: 'text-orange-500' },
-            { id: 'matlab', name: 'MATLAB', icon: 'fa-solid fa-calculator', color: 'text-amber-400' }
-        ];
+        let selectedLang = 'Go';
 
-        // Red Flag Checklist Data
-        const RED_FLAGS = [
-            { id: 'rf_employer', text: 'Written for an employer/client without written rights transfer' },
-            { id: 'rf_fork', text: 'Fork, mirror, copy, or bootcamp / tutorial project' },
-            { id: 'rf_squashed', text: 'Single commit zip upload or squashed history' },
-            { id: 'rf_rewritten', text: 'Rewritten or fabricated git history to look older' },
-            { id: 'rf_exclusive', text: 'Exclusively licensed or previously sold to another AI lab' },
-            { id: 'rf_secrets', text: 'Contains hardcoded passwords, API keys, or personal data (PII)' }
-        ];
-
-        // App State
-        const state = {
-            selectedLanguages: ['go', 'rust'],
-            loc: 65000,
-            commits: 1250,
-            prs: 120,
-            span: 8.0,
-            contributors: 6,
-            coverage: 38,
-            aiPercentage: 20,
-            activeRedFlags: new Set()
-        };
-
-        // Initialize UI Elements
-        document.addEventListener('DOMContentLoaded', () => {
-            renderLanguages();
-            renderRedFlags();
-            setupEventListeners();
-            evaluateEligibility();
-        });
-
-        // Render Language Checkboxes
-        function renderLanguages() {
-            const container = document.getElementById('languagesContainer');
-            container.innerHTML = TARGET_LANGUAGES.map(lang => {
-                const isSelected = state.selectedLanguages.includes(lang.id);
-                return `
-                    <label class="cursor-pointer flex items-center p-3 rounded-xl border transition-all ${
-                        isSelected 
-                            ? 'bg-brand-500/10 border-brand-500/60 text-white' 
-                            : 'bg-slate-900/50 border-slate-700/70 text-slate-400 hover:border-slate-600'
-                    }">
-                        <input type="checkbox" value="${lang.id}" ${isSelected ? 'checked' : ''} 
-                               onchange="toggleLanguage('${lang.id}')" class="hidden">
-                        <i class="${lang.icon} ${lang.color} text-base mr-2.5"></i>
-                        <span class="text-xs font-semibold">${lang.name}</span>
-                    </label>
-                `;
-            }).join('');
-        }
-
-        // Render Red Flags List
-        function renderRedFlags() {
-            const container = document.getElementById('redFlagsContainer');
-            container.innerHTML = RED_FLAGS.map(rf => {
-                const isChecked = state.activeRedFlags.has(rf.id);
-                return `
-                    <label class="flex items-start p-3 rounded-xl border transition-all cursor-pointer ${
-                        isChecked 
-                            ? 'bg-rose-500/10 border-rose-500/40 text-rose-200' 
-                            : 'bg-slate-900/40 border-slate-800 text-slate-300 hover:border-slate-700'
-                    }">
-                        <input type="checkbox" ${isChecked ? 'checked' : ''} 
-                               onchange="toggleRedFlag('${rf.id}')" 
-                               class="mt-0.5 rounded border-slate-700 text-rose-600 focus:ring-rose-500 bg-slate-900 h-4 w-4">
-                        <span class="ml-2.5 text-xs font-medium leading-relaxed">${rf.text}</span>
-                    </label>
-                `;
-            }).join('');
-        }
-
-        // Setup DOM event listeners for inputs
-        function setupEventListeners() {
-            document.getElementById('inputLoc').addEventListener('input', (e) => { state.loc = parseInt(e.target.value) || 0; evaluateEligibility(); });
-            document.getElementById('inputCommits').addEventListener('input', (e) => { state.commits = parseInt(e.target.value) || 0; evaluateEligibility(); });
-            document.getElementById('inputPrs').addEventListener('input', (e) => { state.prs = parseInt(e.target.value) || 0; evaluateEligibility(); });
-            document.getElementById('inputSpan').addEventListener('input', (e) => { state.span = parseFloat(e.target.value) || 0; evaluateEligibility(); });
-            document.getElementById('inputContributors').addEventListener('input', (e) => { state.contributors = parseInt(e.target.value) || 0; evaluateEligibility(); });
-            document.getElementById('inputCoverage').addEventListener('input', (e) => { state.coverage = parseInt(e.target.value) || 0; evaluateEligibility(); });
-
-            const aiSlider = document.getElementById('inputAiPercentage');
-            aiSlider.addEventListener('input', (e) => {
-                state.aiPercentage = parseInt(e.target.value);
-                document.getElementById('aiPercentageLabel').innerText = `${state.aiPercentage}% AI / ${100 - state.aiPercentage}% Human`;
-                evaluateEligibility();
+        function toggleLang(lang) {
+            selectedLang = lang;
+            ['Go', 'Rust', 'C', 'C++', 'Swift', 'MATLAB'].forEach(l => {
+                document.getElementById(`percent-${l}`).innerText = (l === lang) ? '100%' : '0%';
             });
-
-            // Tabs toggle
-            document.getElementById('tabGithubBtn').addEventListener('click', () => switchTab('github'));
-            document.getElementById('tabBundleBtn').addEventListener('click', () => switchTab('bundle'));
+            calculateEligibility();
         }
 
-        function toggleLanguage(id) {
-            if (state.selectedLanguages.includes(id)) {
-                state.selectedLanguages = state.selectedLanguages.filter(item => item !== id);
-            } else {
-                state.selectedLanguages.push(id);
-            }
-            renderLanguages();
-            evaluateEligibility();
-        }
+        function calculateEligibility() {
+            const loc = parseInt(document.getElementById('inputLoc').value) || 0;
+            const commits = parseInt(document.getElementById('inputCommits').value) || 0;
+            const prs = parseInt(document.getElementById('inputPrs').value) || 0;
+            const months = parseInt(document.getElementById('inputMonths').value) || 0;
+            const authors = parseInt(document.getElementById('inputAuthors').value) || 0;
+            const coverage = parseInt(document.getElementById('inputCoverage').value) || 0;
+            const aiRatio = parseInt(document.getElementById('inputAiRatio').value) || 0;
 
-        function toggleRedFlag(id) {
-            if (state.activeRedFlags.has(id)) {
-                state.activeRedFlags.delete(id);
-            } else {
-                state.activeRedFlags.add(id);
-            }
-            renderRedFlags();
-            evaluateEligibility();
-        }
+            document.getElementById('aiRatioLabel').innerText = `${aiRatio}% AI Generated`;
 
-        // Core Qualification Audit Algorithm
-        function evaluateEligibility() {
+            const rf1 = document.getElementById('rf1').checked;
+            const rf2 = document.getElementById('rf2').checked;
+            const rf3 = document.getElementById('rf3').checked;
+            const rf4 = document.getElementById('rf4').checked;
+            const hasRedFlags = rf1 || rf2 || rf3 || rf4;
+
             const checks = [
-                {
-                    name: 'Target Languages Selected',
-                    passed: state.selectedLanguages.length > 0,
-                    detail: state.selectedLanguages.length > 0 ? `${state.selectedLanguages.map(l => l.toUpperCase()).join(', ')}` : 'None selected'
-                },
-                {
-                    name: 'Lines of Code (≥ 50,000)',
-                    passed: state.loc >= 50000,
-                    detail: `${state.loc.toLocaleString()} LOC`
-                },
-                {
-                    name: 'Total Commits (≥ 1,000)',
-                    passed: state.commits >= 1000,
-                    detail: `${state.commits.toLocaleString()} commits`
-                },
-                {
-                    name: 'Merged Pull Requests (≥ 100)',
-                    passed: state.prs >= 100,
-                    detail: `${state.prs} PRs`
-                },
-                {
-                    name: 'PR Time Span (≥ 6 months)',
-                    passed: state.span >= 6.0,
-                    detail: `${state.span} months`
-                },
-                {
-                    name: 'Active Contributors (≥ 5 people)',
-                    passed: state.contributors >= 5,
-                    detail: `${state.contributors} authors`
-                },
-                {
-                    name: 'Test Coverage (≥ 25%)',
-                    passed: state.coverage >= 25,
-                    detail: `${state.coverage}% covered`
-                },
-                {
-                    name: 'Mainly Human Authored',
-                    passed: state.aiPercentage <= 40,
-                    detail: `${100 - state.aiPercentage}% human code`
-                },
-                {
-                    name: 'Red-Flag Disqualifications',
-                    passed: state.activeRedFlags.size === 0,
-                    detail: state.activeRedFlags.size === 0 ? 'Clean' : `${state.activeRedFlags.size} violations`
-                }
+                { label: "Target Language (&ge;50%)", pass: true, detail: selectedLang },
+                { label: "Lines of Code (&ge;50,000)", pass: loc >= 50000, detail: `${loc.toLocaleString()} LOC` },
+                { label: "Commits (&ge;1,000)", pass: commits >= 1000, detail: `${commits.toLocaleString()} commits` },
+                { label: "Merged PRs (&ge;100)", pass: prs >= 100, detail: `${prs} PRs` },
+                { label: "PR Timeline Span (&ge;6 mos)", pass: months >= 6, detail: `${months} months` },
+                { label: "Team Size (&ge;5 authors)", pass: authors >= 5, detail: `${authors} authors` },
+                { label: "Test Coverage (&ge;25%)", pass: coverage >= 25, detail: `${coverage}%` },
+                { label: "Human Authored Code", pass: aiRatio <= 40, detail: `${100 - aiRatio}% Human` },
+                { label: "No Rejection Red Flags", pass: !hasRedFlags, detail: hasRedFlags ? "Flags Found" : "Clean" }
             ];
 
-            const totalChecks = checks.length;
-            const passedChecks = checks.filter(c => c.passed).length;
-            const scorePercent = Math.round((passedChecks / totalChecks) * 100);
-            const isFullyEligible = passedChecks === totalChecks;
+            const passedAll = checks.every(c => c.pass);
 
-            // Render Status Checklist
-            const statusListElem = document.getElementById('statusList');
-            statusListElem.innerHTML = checks.map(c => `
-                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                    <span class="flex items-center text-slate-300">
-                        <i class="fa-solid ${c.passed ? 'fa-check text-emerald-400' : 'fa-xmark text-rose-400'} w-4 mr-2"></i>
-                        ${c.name}
-                    </span>
-                    <span class="font-mono text-[11px] ${c.passed ? 'text-slate-400' : 'text-rose-400 font-semibold'}">${c.detail}</span>
+            // Render Status Badge
+            const badge = document.getElementById('statusBadge');
+            if (passedAll) {
+                badge.className = "p-4 rounded-xl border mb-6 text-center bg-emerald-950/60 border-emerald-500/50 text-emerald-300";
+                badge.innerHTML = `
+                    <i data-lucide="check-circle-2" class="w-8 h-8 mx-auto mb-2 text-emerald-400"></i>
+                    <h4 class="font-bold text-sm">Qualified for Submission</h4>
+                    <p class="text-xs text-emerald-400/80 mt-1">Repository meets all minimum threshold requirements.</p>
+                `;
+            } else {
+                badge.className = "p-4 rounded-xl border mb-6 text-center bg-rose-950/60 border-rose-500/50 text-rose-300";
+                badge.innerHTML = `
+                    <i data-lucide="x-circle" class="w-8 h-8 mx-auto mb-2 text-rose-400"></i>
+                    <h4 class="font-bold text-sm">Does Not Meet Requirements</h4>
+                    <p class="text-xs text-rose-400/80 mt-1">Fails ${checks.filter(c => !c.pass).length} platform verification rule(s).</p>
+                `;
+            }
+
+            // Render Checklist Results
+            const list = document.getElementById('checklistResults');
+            list.innerHTML = checks.map(c => `
+                <div class="flex items-center justify-between p-2 rounded ${c.pass ? 'bg-slate-900/40 text-slate-300' : 'bg-rose-950/30 text-rose-300 border border-rose-900/40'}">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="${c.pass ? 'check' : 'x'}" class="w-4 h-4 ${c.pass ? 'text-emerald-400' : 'text-rose-400'}"></i>
+                        <span>${c.label}</span>
+                    </div>
+                    <span class="font-mono text-[11px] opacity-80">${c.detail}</span>
                 </div>
             `).join('');
 
-            // Update Header Score & Badges
-            document.getElementById('readinessScore').innerText = `${scorePercent}%`;
-            const badgeElem = document.getElementById('overallStatusBadge');
-            const submitBtn = document.getElementById('submitBtn');
-
-            if (isFullyEligible) {
-                badgeElem.className = 'mt-1 inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30';
-                badgeElem.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i> ELIGIBLE FOR SUBMISSION`;
-                
-                document.getElementById('actionBanner').className = 'mt-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300';
-                document.getElementById('actionBanner').innerHTML = `
-                    <div class="font-bold flex items-center mb-1"><i class="fa-solid fa-circle-info mr-1.5"></i> Ready for Submission</div>
-                    Your codebase meets all criteria! You can submit your GitHub repository or generate an offline Git Bundle.
-                `;
-
-                submitBtn.disabled = false;
-                submitBtn.className = 'w-full py-3 px-4 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center space-x-2 cursor-pointer';
-            } else {
-                badgeElem.className = 'mt-1 inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30';
-                badgeElem.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1.5"></i> ACTION REQUIRED`;
-
-                document.getElementById('actionBanner').className = 'mt-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs text-rose-300';
-                document.getElementById('actionBanner').innerHTML = `
-                    <div class="font-bold flex items-center mb-1"><i class="fa-solid fa-circle-xmark mr-1.5"></i> ${totalChecks - passedChecks} Requirement(s) Unmet</div>
-                    Adjust your repo configuration or resolve red flags before submitting.
-                `;
-
-                submitBtn.disabled = true;
-                submitBtn.className = 'w-full py-3 px-4 bg-slate-700 text-slate-400 text-xs font-bold rounded-xl cursor-not-allowed flex items-center justify-center space-x-2 opacity-70';
-            }
+            lucide.createIcons();
         }
 
-        // Switch Tabs Logic
-        function switchTab(tab) {
-            const githubBtn = document.getElementById('tabGithubBtn');
-            const bundleBtn = document.getElementById('tabBundleBtn');
-            const githubContent = document.getElementById('tabGithubContent');
-            const bundleContent = document.getElementById('tabBundleContent');
-
-            if (tab === 'github') {
-                githubBtn.className = 'flex-1 py-2 px-3 text-center text-xs font-semibold text-brand-400 border-b-2 border-brand-500 transition-colors';
-                bundleBtn.className = 'flex-1 py-2 px-3 text-center text-xs font-semibold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition-colors';
-                githubContent.classList.remove('hidden');
-                bundleContent.classList.add('hidden');
-            } else {
-                bundleBtn.className = 'flex-1 py-2 px-3 text-center text-xs font-semibold text-brand-400 border-b-2 border-brand-500 transition-colors';
-                githubBtn.className = 'flex-1 py-2 px-3 text-center text-xs font-semibold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition-colors';
-                bundleContent.classList.remove('hidden');
-                githubContent.classList.add('hidden');
-            }
+        function toggleBundleModal() {
+            const modal = document.getElementById('bundleModal');
+            modal.classList.toggle('hidden');
+            modal.classList.toggle('flex');
         }
 
-        // Copy Terminal Commands for Git Bundle
-        function copyBundleCommands() {
-            const text = "git fetch --all --tags\ngit bundle create repository.bundle --all\ngit bundle verify repository.bundle";
-            
-            // Clipboard copy fallbacks
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text);
-            } else {
-                const textArea = document.createElement("textarea");
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-            }
-
-            showModal("Commands Copied!", "Git bundle generation commands have been copied to your clipboard.", "fa-regular fa-copy", "emerald");
+        function copyCommand() {
+            navigator.clipboard.writeText('git bundle create codebase_submission.bundle --all');
+            alert('Git bundle command copied to clipboard!');
         }
 
-        // Handle Submission Mock
-        function handleSubmission() {
-            showModal(
-                "Repository Connected", 
-                "The read-only GitHub app has been authorized. Automated validation checks are now analyzing commit history, PRs, and license rights.",
-                "fa-brands fa-github",
-                "emerald"
-            );
-        }
-
-        function showModal(title, message, iconClass, color) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalMessage').innerText = message;
-            document.getElementById('modalIcon').innerHTML = `<i class="${iconClass}"></i>`;
-            document.getElementById('notificationModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('notificationModal').classList.add('hidden');
-        }
+        // Initialize on page load
+        toggleLang('Go');
     </script>
 </body>
 </html>
